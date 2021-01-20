@@ -1,0 +1,13 @@
+discord
+aiohttp
+chatterbot
+praw
+apraw
+datetime
+typing
+youtube_dl
+requests
+nltk
+numpy
+tflearn
+tensorflow

@@ -9,9 +9,15 @@ from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
 import aiohttp
 import random
-import reddit
+import wikipedia
 import praw
-#Variables
+from chatbot import Chat, register_call
+bot = ChatBot("My Bot")
+
+conversation = ["Hello","wassup?","call me Deez","Deez Nuts!","how do you do?","question is irrelevant","you Noob","sorry","alright!","Bye!!","cya"]
+
+trainer = ListTrainer(bot)
+trainer.train(conversation)
 
 date = datetime.datetime.now()
 
@@ -45,11 +51,24 @@ ID: [{client.user.id}]
 ============================
 Default Prefix: [{default_prefix}]
 ============================
-Servers: [{len(client.guilds)}] 
+Servers: [{len(client.guilds)}]
 ============================
 Members: [{len(set(client.get_all_members()))}]
 ============================
   ''')
+
+async def change_presence():
+    await client.wait_until_ready()
+    statuses = ['Deez Nuts!',f'on {len(client.guilds)} servers|{len(set(client.get_all_members()))} Noobs|' ,'@deez','your mom is thicc']
+    while not client.is_closed():
+        status = random.choice(statuses)
+
+        await client.change_presence(activity=discord.Game(name = status))
+        await asyncio.sleep(10)
+client.loop.create_task(change_presence())
+
+
+
 
 
 #on_guild_join
@@ -82,10 +101,16 @@ async def on_message(message):
     return
   if isinstance(message.channel, discord.channel.DMChannel):
     return get_prefix
+  if message.author.bot:
     return
+  query = message.content
+  answer = bot.get_response(query)
+  await message.channel.send(answer)
   await client.process_commands(message)
-#cog
 
+  
+
+#cog
 @client.command()
 async def load(ctx, *, extension):
   if ctx.author.id in ownerids:
@@ -134,7 +159,7 @@ async def reload(ctx, *, extension):
       em = discord.Embed(title=f":x: Error", description=f"Error: {error}", color=discord.Color.red())
       em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
       await ctx.send(embed=em)
-  
+
   else:
     em = discord.Embed(title=f":x: No permissions!", description=f"You don't have permissions to use this command!", color=discord.Color.red())
     em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
@@ -183,9 +208,11 @@ async def speak(ctx):
       response = chatbot.get_response(request)
       await ctx.send(request)
       await ctx.send(response)
-      
 
- 
+
+
+
+
+
 
 client.run(token)
-

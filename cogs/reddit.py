@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 import random
-import reddit
+
 import praw
 
 def getMeme():
