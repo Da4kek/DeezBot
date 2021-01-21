@@ -12,6 +12,7 @@ import random
 import wikipedia
 import praw
 from chatbot import Chat, register_call
+import pandas as pd
 bot = ChatBot("My Bot")
 
 conversation = ["Hello","wassup?","call me Deez","Deez Nuts!","how do you do?","question is irrelevant","you Noob","sorry","alright!","Bye!!","cya"]
@@ -92,6 +93,8 @@ async def on_guild_remove(guild):
 #on message
 @client.event
 async def on_message(message):
+  channel = message.channel
+  mychannelids =[800190859638997056]
   if message.content.startswith('<@!800013428936278068>'):
     with open("./data/prefixes.json", 'r+') as f:
       data = json.load(f)
@@ -103,9 +106,16 @@ async def on_message(message):
     return get_prefix
   if message.author.bot:
     return
-  query = message.content
-  answer = bot.get_response(query)
-  await message.channel.send(answer)
+  else:
+    if message.channel.id in mychannelids:
+      query = message.content
+      answer = bot.get_response(query)
+      await message.channel.send(answer)
+  
+
+    
+  
+
   await client.process_commands(message)
 
   
@@ -192,6 +202,17 @@ async def unload(ctx, *, extension):
 for filename in os.listdir('./cogs'):
   if filename.endswith('.py'):
     client.load_extension(f'cogs.{filename[:-3]}')
+
+@client.event
+async def on_guild_join(guild):
+    with open("data\prefixes.json", "r") as f:
+        prefixes = json.load(f)
+    prefixes[str(guild.id)] = "noah "
+    with open("data\prefixes.json", "w") as f:
+        json.dump(prefixes,f,indent =4)
+
+
+
 
 @client.command()
 async def speak(ctx):
