@@ -13,12 +13,13 @@ import wikipedia
 import praw
 from chatbot import Chat, register_call
 import pandas as pd
+
 bot = ChatBot("My Bot")
-
 conversation = ["Hello","wassup?","call me Deez","Deez Nuts!","how do you do?","question is irrelevant","you Noob","sorry","alright!","Bye!!","cya"]
-
 trainer = ListTrainer(bot)
 trainer.train(conversation)
+
+
 
 date = datetime.datetime.now()
 
@@ -68,10 +69,6 @@ async def change_presence():
         await asyncio.sleep(10)
 client.loop.create_task(change_presence())
 
-
-
-
-
 #on_guild_join
 @client.event
 async def on_guild_join(guild):
@@ -111,13 +108,7 @@ async def on_message(message):
       query = message.content
       answer = bot.get_response(query)
       await message.channel.send(answer)
-  
-
-    
-  
-
   await client.process_commands(message)
-
   
 
 #cog
@@ -144,6 +135,7 @@ async def load(ctx, *, extension):
     em = discord.Embed(title=f":x: No permissions!", description=f"You don't have permissions to use this command!", color=discord.Color.red())
     em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
     await ctx.send(embed=em)
+
 
 @client.command()
 async def reload(ctx, *, extension):
@@ -199,19 +191,18 @@ async def unload(ctx, *, extension):
     em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
     await ctx.send(embed=em)
 
+    
 for filename in os.listdir('./cogs'):
   if filename.endswith('.py'):
     client.load_extension(f'cogs.{filename[:-3]}')
-
+  
 @client.event
 async def on_guild_join(guild):
     with open("data\prefixes.json", "r") as f:
         prefixes = json.load(f)
-    prefixes[str(guild.id)] = "noah "
+    prefixes[str(guild.id)] = "deez "
     with open("data\prefixes.json", "w") as f:
         json.dump(prefixes,f,indent =4)
-
-
 
 
 @client.command()
@@ -229,11 +220,6 @@ async def speak(ctx):
       response = chatbot.get_response(request)
       await ctx.send(request)
       await ctx.send(response)
-
-
-
-
-
-
+  
 
 client.run(token)
