@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import json
 import datetime
+import time
 
 date = datetime.datetime.now()
 
@@ -23,14 +24,19 @@ class Mod(commands.Cog):
     em = discord.Embed(title=f"Prefix Changed!", description=f":white_check_mark: Succesfully changed prefix to: **{prefix}**", color=discord.Color.green())
     await ctx.send(embed=em)
 
-  # @commands.command()
-  # async def kick(self, ctx, member: discord.Member, *, reason=None):
-  #   try:
+  @commands.command(name="kick", aliases=['kick_user'])
+  async def kick_command(self, ctx, user : discord.Member, *, reason):
+      await user.ban(reason=reason)
 
-    
-  #     em = discord.Embed(title=f":x: Error", description=f"Error: {error}", color=discord.Color.red())
-  #     em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
-  #     await ctx.send(embed=em)
+      embed = discord.Embed(color=discord.Color.red())
+      embed.set_footer(text=f"Timestamp: {time.ctime()}\nInvoked by {ctx.author}", icon_url=ctx.author.avatar_url)
+      embed.set_thumbnail(url=ctx.author.avatar_url)
+      embed.add_field(name=f"KICK CASE | BY {ctx.author.mention}",
+                      value=f"The user {user.mention} has been kiccked from the guild.\nREASON: **{reason}**\nMODERATOR: {ctx.author.mention}")
+      await ctx.send(embed=embed)
+
+
+  
 
   @commands.command()
   async def createchannel(self,ctx,channel):

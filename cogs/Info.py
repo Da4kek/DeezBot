@@ -25,7 +25,7 @@ class Info(commands.Cog):
     em.set_thumbnail(url=ctx.guild.me.avatar_url)
     em.add_field(name=f":small_blue_diamond: | **__Version:__**", value=f"[`{version}`]", inline=False)
     em.add_field(name=f":books: | **__Library:__**", value=f"[`discord.py`]", inline=False)
-    em.add_field(name=f":keyboard: | **__Creators:__**", value=f"[`- RandomDudk81#8537`]\n[`- RealNoah#0011`]", inline=False)
+    em.add_field(name=f":keyboard: | **__Creators:__**", value=f"[`- RealNoah#0011`]", inline=False)
     em.add_field(name=f":busts_in_silhouette: | **__Servers & Users:__**", value=f"Total Servers: [`{len(self.client.guilds)}`]\nTotal Users: [`{len(set(self.client.get_all_members()))}`]", inline=False)
     em.add_field(name=":question: | **__Prefix:__**", value=f"Default: [`!`]\nServer: [`{ctx.prefix}`]", inline=False)
     em.add_field(name=":bar_chart: | **__Ping:__**", value=f"Ping: [`{round(self.client.latency * 1000)}`]", inline=False)

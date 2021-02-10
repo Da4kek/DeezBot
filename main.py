@@ -18,29 +18,20 @@ bot = ChatBot("My Bot")
 conversation = ["Hello","wassup?","call me Deez","Deez Nuts!","how do you do?","question is irrelevant","you Noob","sorry","alright!","Bye!!","cya"]
 trainer = ListTrainer(bot)
 trainer.train(conversation)
-
-
-
 date = datetime.datetime.now()
-
 with open("./data/config.json", 'r+') as f:
   data = json.load(f)
   token = data['token']
   ownerids = data['ownerids']
   default_prefix = data['default_prefix']
-
 def get_prefix(client, message):
-
   with open("./data/prefixes.json", 'r+') as f:
     prefixes = json.load(f)
   return prefixes[str(message.guild.id)]
-
-
 #Prefix
 intents = discord.Intents.all()
 intents.members = True
 client = commands.Bot(command_prefix=(get_prefix), intents=intents)
-
 #Code
 #Events
 #on ready
@@ -58,17 +49,14 @@ Servers: [{len(client.guilds)}]
 Members: [{len(set(client.get_all_members()))}]
 ============================
   ''')
-
 async def change_presence():
     await client.wait_until_ready()
     statuses = ['Deez Nuts!',f'on {len(client.guilds)} servers|{len(set(client.get_all_members()))} Noobs|' ,'@deez','your mom is thicc']
     while not client.is_closed():
         status = random.choice(statuses)
-
         await client.change_presence(activity=discord.Game(name = status))
         await asyncio.sleep(10)
 client.loop.create_task(change_presence())
-
 #on_guild_join
 @client.event
 async def on_guild_join(guild):
@@ -77,7 +65,6 @@ async def on_guild_join(guild):
   prefixes[str(guild.id)] = f'{default_prefix}'
   with open ("./data/prefixes.json", 'w') as f:
     json.dump(prefixes, f, indent=4)
-
 # on guild remove
 @client.event
 async def on_guild_remove(guild):
@@ -86,7 +73,6 @@ async def on_guild_remove(guild):
   prefixes.pop(str(guild.id))
   with open("./data/prefixes.json", 'r+') as f:
     json.dump(prefixes, f, indent=4)
-
 #on message
 @client.event
 async def on_message(message):
@@ -109,8 +95,6 @@ async def on_message(message):
       answer = bot.get_response(query)
       await message.channel.send(answer)
   await client.process_commands(message)
-  
-
 #cog
 @client.command()
 async def load(ctx, *, extension):
@@ -125,7 +109,6 @@ async def load(ctx, *, extension):
       em = discord.Embed(title=f":white_check_mark: Loaded Cog(s)", description=f"Succesfully loaded {extension} cog(s)!", color=discord.Color.green())
       em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
       await ctx.send(embed=em)
-
     except Exception as error:
       em = discord.Embed(title=f":x: Error", description=f"Error: {error}", color=discord.Color.red())
       em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
@@ -135,8 +118,6 @@ async def load(ctx, *, extension):
     em = discord.Embed(title=f":x: No permissions!", description=f"You don't have permissions to use this command!", color=discord.Color.red())
     em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
     await ctx.send(embed=em)
-
-
 @client.command()
 async def reload(ctx, *, extension):
   if ctx.author.id in ownerids:
@@ -156,17 +137,14 @@ async def reload(ctx, *, extension):
       em = discord.Embed(title=f":white_check_mark: Reloaded Cog(s)", description=f"Succesfully reloaded **{extension}** cog(s)!", color=discord.Color.green())
       em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
       await ctx.send(embed=em)
-
     except Exception as error:
       em = discord.Embed(title=f":x: Error", description=f"Error: {error}", color=discord.Color.red())
       em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
       await ctx.send(embed=em)
-
   else:
     em = discord.Embed(title=f":x: No permissions!", description=f"You don't have permissions to use this command!", color=discord.Color.red())
     em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
     await ctx.send(embed=em)
-
 @client.command()
 async def unload(ctx, *, extension):
   if ctx.author.id in ownerids:
@@ -180,7 +158,6 @@ async def unload(ctx, *, extension):
       em = discord.Embed(title=f":white_check_mark: Unloaded Cog(s)", description=f"Succesfully unloaded {extension} cog(s)!", color=discord.Color.green())
       em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
       await ctx.send(embed=em)
-
     except Exception as error:
       em = discord.Embed(title=f":x: Error", description=f"Error: {error}", color=discord.Color.red())
       em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
@@ -191,7 +168,6 @@ async def unload(ctx, *, extension):
     em.set_footer(text=f"Today at {date:%I}:{date:%M} {date:%p}")
     await ctx.send(embed=em)
 
-    
 for filename in os.listdir('./cogs'):
   if filename.endswith('.py'):
     client.load_extension(f'cogs.{filename[:-3]}')
